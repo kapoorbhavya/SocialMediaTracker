@@ -197,6 +197,13 @@ body {
     font-size: 1.2rem;
 }
 
+/* Header Registration Number */
+.header-reg-number {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-left: auto; /* Push it to the right */
+}
+
 /* Chat Box */
 .chat-box {
     flex-grow: 1;
@@ -471,10 +478,4 @@ body {
     .chat-box {
         padding: 15px;
     }
-}
-/* Header Registration Number */
-.header-reg-number {
-    font-size: 0.9rem;
-    color: #aaa;
-    margin-left: auto; /* Push it to the right */
 }

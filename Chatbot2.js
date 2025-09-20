@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (attachedFile.type.startsWith('image/')) {
                 const reader = new FileReader();
                 reader.onloadend = async () => {
-                    contents[1].parts.push({
+                    contents[0].parts.push({
                         inlineData: {
                             mimeType: attachedFile.type,
                             data: reader.result.split(',')[1]
@@ -109,12 +109,13 @@ document.addEventListener("DOMContentLoaded", function () {
                         removeTypingIndicator(typingIndicator);
                         const data = await response.json();
 
-                        if (data.candidates && data.candidates.length > 0) {
-                            const botReply = data.candidates[0]?.content?.parts?.[0]?.text || "I couldn't process that with the image. Try again!";
+                        if (data.candidates && data.candidates.length > 0 && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts.length > 0) {
+                            const botReply = data.candidates[0].content.parts[0].text || "I couldn't process that with the image. Try again!";
                             addMessage(botReply, "bot");
                             storeChat(userMessage, botReply);
                         } else {
                             addMessage("I couldn't process that with the image. Try again!", "bot");
+                            console.error("No valid response for image:", data);
                         }
                         attachedFile = null;
                     } catch (error) {
