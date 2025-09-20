@@ -176,6 +176,7 @@ body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     align-items: center;
+    justify-content: space-between;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -471,14 +472,7 @@ body {
         padding: 15px;
     }
 }
-/* In your CSS file */
-.chat-header {
-    /* ... other styles ... */
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Distribute space between elements */
-}
-
+/* Header Registration Number */
 .header-reg-number {
     font-size: 0.9rem;
     color: #aaa;

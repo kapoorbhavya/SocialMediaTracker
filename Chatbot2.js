@@ -18,8 +18,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const chatHistoryKey = "social_media_tracker_history";
     const firstMessageKey = "social_media_tracker_first_message";
-    const GEMINI_API_KEY = "AIzaSyDPFeZ0ICUvJUstnM7oUCY1u53WfIsMr2Q";
-    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+    const GEMINI_API_KEY = "AIzaSyBXhhkMf5oeyp5V9l6z7FAEuWHp7Q8RwxI";
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`;
 
     const socialMediaKeywords = ["engagement", "likes", "comments", "shares", "followers", "reach", "impressions", "analytics", "performance", "report", "campaign", "post", "content", "platform", "facebook", "instagram", "twitter", "linkedin", "youtube", "tiktok"];
 
@@ -136,14 +136,22 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         try {
+            console.log("Sending request to Gemini API...");
             const response = await fetch(GEMINI_API_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ contents })
             });
 
+            console.log("API Response status:", response.status);
+            
             removeTypingIndicator(typingIndicator);
             const data = await response.json();
+            console.log("API Response data:", data);
+
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status} - ${data.error?.message || 'Unknown error'}`);
+            }
 
             if (data.candidates && data.candidates.length > 0) {
                 const botReply = data.candidates[0]?.content?.parts?.[0]?.text || "I couldn't process that. Try again!";
@@ -151,10 +159,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 storeChat(userMessage, botReply);
             } else {
                 addMessage("I couldn't process that. Try again!", "bot");
+                console.error("No candidates in response:", data);
             }
         } catch (error) {
             removeTypingIndicator(typingIndicator);
-            addMessage("Oops! Something went wrong. Try again later.", "bot");
+            const errorMessage = error.message.includes("API Error") 
+                ? `API Error: ${error.message}` 
+                : "Oops! Something went wrong. Try again later.";
+            addMessage(errorMessage, "bot");
             console.error("Gemini API Error:", error);
         }
     }
