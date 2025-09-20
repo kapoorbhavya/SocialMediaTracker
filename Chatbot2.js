@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const chatHistoryKey = "social_media_tracker_history";
     const firstMessageKey = "social_media_tracker_first_message";
     const GEMINI_API_KEY = "AIzaSyBXhhkMf5oeyp5V9l6z7FAEuWHp7Q8RwxI";
-    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`;
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
     
     // Debug: Log API key status
     console.log("🔑 API Key Status:", GEMINI_API_KEY ? "✅ Set" : "❌ Missing");
@@ -84,12 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const contents = [
             {
-                role: "user",
-                parts: [{ text: systemMessage }]
-            },
-            {
-                role: "user",
-                parts: [{ text: `Previous conversation:\n${chatContext}\nUser: ${userMessage}` }]
+                parts: [{ text: `${systemMessage}\n\nPrevious conversation:\n${chatContext}\n\nUser: ${userMessage}` }]
             }
         ];
 
@@ -157,13 +152,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 throw new Error(`API Error: ${response.status} - ${data.error?.message || 'Unknown error'}`);
             }
 
-            if (data.candidates && data.candidates.length > 0) {
-                const botReply = data.candidates[0]?.content?.parts?.[0]?.text || "I couldn't process that. Try again!";
+            if (data.candidates && data.candidates.length > 0 && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts.length > 0) {
+                const botReply = data.candidates[0].content.parts[0].text || "I couldn't process that. Try again!";
                 addMessage(botReply, "bot");
                 storeChat(userMessage, botReply);
             } else {
-                addMessage("I couldn't process that. Try again!", "bot");
-                console.error("No candidates in response:", data);
+                console.error("Invalid response structure:", data);
+                addMessage(`API Error: ${JSON.stringify(data.error || data, null, 2)}`, "bot");
             }
         } catch (error) {
             removeTypingIndicator(typingIndicator);
