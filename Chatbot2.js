@@ -20,6 +20,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const firstMessageKey = "social_media_tracker_first_message";
     const GEMINI_API_KEY = "AIzaSyBXhhkMf5oeyp5V9l6z7FAEuWHp7Q8RwxI";
     const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`;
+    
+    // Debug: Log API key status
+    console.log("🔑 API Key Status:", GEMINI_API_KEY ? "✅ Set" : "❌ Missing");
+    console.log("🌐 API URL:", GEMINI_API_URL);
 
     const socialMediaKeywords = ["engagement", "likes", "comments", "shares", "followers", "reach", "impressions", "analytics", "performance", "report", "campaign", "post", "content", "platform", "facebook", "instagram", "twitter", "linkedin", "youtube", "tiktok"];
 
